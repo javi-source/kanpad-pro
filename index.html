@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KanPad Pro - Bloc de Notas & Documentos para Kanlane</title>
+  <!-- SDK Oficial de Kanlane -->
+  <link rel="stylesheet" href="https://kanlane.com/plugins/sdk/workhub-plugin.css">
+  <!-- Estilos propios de KanPad Pro -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <div class="kanpad-app">
+    <!-- Header Principal -->
+    <header class="kanpad-header">
+      <div class="kanpad-header-left">
+        <button id="btnToggleSidebar" class="app-btn btn-icon-only" title="Mostrar/Ocultar barra lateral">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+        </button>
+
+        <div class="brand-badge">
+          <div class="brand-logo-icon">K</div>
+          <span>KanPad Pro</span>
+          <span id="envBadge" class="brand-tag">PLUGIN</span>
+        </div>
+
+        <input type="text" id="noteTitleInput" class="note-title-input" value="Documento sin título" placeholder="Título de la nota...">
+      </div>
+
+      <!-- Selector Central de Modos: Documento vs Notepad++ Código -->
+      <div class="kanpad-header-center">
+        <div class="mode-segmented-control">
+          <button class="mode-btn active" data-mode="doc" title="Modo Documento enriquecido tipo Google Docs o Word">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            <span>Documento (Docs)</span>
+          </button>
+          <button class="mode-btn" data-mode="code" title="Modo Código tipo Notepad++ con formateo y números de línea">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            <span>Notepad++ (Código)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Acciones Rápidas -->
+      <div class="kanpad-header-right">
+        <button id="btnKanlaneTasks" class="app-btn" title="Vincular con tareas de Kanlane">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+          <span>Tareas</span>
+        </button>
+
+        <button id="btnExport" class="app-btn" title="Descargar como HTML, Markdown o Script">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <span>Exportar</span>
+        </button>
+
+        <button id="btnSave" class="app-btn btn-primary" title="Guardar nota ahora (Autosave activo)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+          <span>Guardar</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Cuerpo de la Aplicación -->
+    <div class="kanpad-body">
+      <!-- Barra Lateral / Gestor de Notas -->
+      <aside id="sidebar" class="kanpad-sidebar">
+        <div class="sidebar-header">
+          <button id="btnNewNote" class="app-btn btn-primary" style="width: 100%; justify-content: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>Nueva Nota / Doc</span>
+          </button>
+
+          <div class="sidebar-search-box">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--ink-faint)"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="searchInput" placeholder="Buscar notas...">
+          </div>
+
+          <div class="sidebar-filter-tabs">
+            <button class="filter-tab active" data-filter="all">Todos</button>
+            <button class="filter-tab" data-filter="doc">Docs</button>
+            <button class="filter-tab" data-filter="code">Código</button>
+          </div>
+        </div>
+
+        <div id="notesList" class="sidebar-notes-list">
+          <!-- Lista dinámica de notas -->
+        </div>
+      </aside>
+
+      <!-- Área de Edición Central -->
+      <main class="kanpad-editor-container">
+        <!-- Barra de herramientas para Modo Documento (Word/Docs) -->
+        <div id="docToolbar" class="doc-toolbar">
+          <select class="tb-select" onchange="KanPad.execDocCmd('formatBlock', this.value); this.value='p';">
+            <option value="p">Normal (Párrafo)</option>
+            <option value="h1">Título Grande (H1)</option>
+            <option value="h2">Sección (H2)</option>
+            <option value="h3">Subsección (H3)</option>
+            <option value="blockquote">Cita destacada</option>
+          </select>
+
+          <div class="tb-divider"></div>
+
+          <button class="tb-btn" title="Negrita (Ctrl+B)" onclick="KanPad.execDocCmd('bold')"><strong>B</strong></button>
+          <button class="tb-btn" title="Cursiva (Ctrl+I)" onclick="KanPad.execDocCmd('italic')"><em>I</em></button>
+          <button class="tb-btn" title="Subrayado (Ctrl+U)" onclick="KanPad.execDocCmd('underline')"><u>U</u></button>
+          <button class="tb-btn" title="Tachado" onclick="KanPad.execDocCmd('strikeThrough')"><s>S</s></button>
+
+          <div class="tb-divider"></div>
+
+          <!-- Listas -->
+          <button class="tb-btn" title="Lista de viñetas" onclick="KanPad.execDocCmd('insertUnorderedList')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          </button>
+          <button class="tb-btn" title="Lista numerada" onclick="KanPad.execDocCmd('insertOrderedList')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="10" y1="6" x2="21" y2="6"></line><line x1="10" y1="12" x2="21" y2="12"></line><line x1="10" y1="18" x2="21" y2="18"></line><path d="M4 6h1v4"></path><path d="M4 10h2"></path><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"></path></svg>
+          </button>
+
+          <div class="tb-divider"></div>
+
+          <!-- Alineación -->
+          <button class="tb-btn" title="Alinear a la izquierda" onclick="KanPad.execDocCmd('justifyLeft')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="17" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="17" y1="18" x2="3" y2="18"></line></svg>
+          </button>
+          <button class="tb-btn" title="Centrar" onclick="KanPad.execDocCmd('justifyCenter')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="10" x2="6" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="18" y1="18" x2="6" y2="18"></line></svg>
+          </button>
+
+          <div class="tb-divider"></div>
+
+          <!-- Tablas Pro (Docs / Word style) -->
+          <button class="app-btn" title="Insertar tabla estilo Google Docs / Word" onclick="KanPad.insertTableModal()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line><line x1="12" y1="3" x2="12" y2="21"></line></svg>
+            <span>Insertar Tabla</span>
+          </button>
+
+          <!-- Bloque de Código Incrustado -->
+          <button class="app-btn" title="Insertar bloque de código formateado" onclick="KanPad.insertDocCodeBlock()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            <span>Bloque Código</span>
+          </button>
+
+          <!-- Cajas de alerta / Callouts -->
+          <button class="app-btn" title="Insertar cuadro de nota/aviso" onclick="KanPad.insertCallout('info')">
+            <span>💡 Nota</span>
+          </button>
+          <button class="app-btn" title="Insertar advertencia" onclick="KanPad.insertCallout('warning')">
+            <span>⚠️ Aviso</span>
+          </button>
+
+          <div class="tb-divider"></div>
+
+          <!-- Separador horizontal y Enlaces -->
+          <button class="tb-btn" title="Línea horizontal divisoria" onclick="KanPad.execDocCmd('insertHorizontalRule')">―</button>
+          <button class="tb-btn" title="Insertar enlace" onclick="const url=prompt('URL del enlace:','https://'); if(url) KanPad.execDocCmd('createLink', url);">🔗</button>
+        </div>
+
+        <!-- Vista Documento (Hoja de trabajo tipo Google Docs) -->
+        <div id="docViewport" class="doc-viewport">
+          <div id="docSheet" class="doc-sheet" contenteditable="true" spellcheck="true">
+            <!-- Contenido dinámico del documento -->
+          </div>
+        </div>
+
+        <!-- Vista Código (Editor Notepad++) -->
+        <div id="codeContainer" class="code-mode-container">
+          <div class="code-mode-toolbar">
+            <div class="code-mode-toolbar-left">
+              <span style="font-size:12px; font-weight:600; color:#fff;">Lenguaje:</span>
+              <select id="codeLangSelect" class="code-lang-select">
+                <option value="javascript">JavaScript / TypeScript (.js, .ts)</option>
+                <option value="json">JSON (.json)</option>
+                <option value="html">HTML5 / XML (.html)</option>
+                <option value="css">CSS / SCSS (.css)</option>
+                <option value="sql">SQL Query (.sql)</option>
+                <option value="python">Python (.py)</option>
+                <option value="cpp">C / C++ (.cpp, .c)</option>
+                <option value="markdown">Markdown (.md)</option>
+                <option value="plaintext">Texto Plano (.txt)</option>
+              </select>
+
+              <button id="btnFormatCode" class="code-tool-btn btn-glow" title="Detecta la sintaxis y formatea el código con sangría limpia">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                <span>⚡ Formatear Código (Prettify)</span>
+              </button>
+            </div>
+
+            <div class="code-mode-toolbar-right">
+              <button id="btnCopyCode" class="code-tool-btn" title="Copiar todo el código al portapapeles">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <span>Copiar Todo</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="code-editor-layout">
+            <div id="codeLineNumbers" class="code-line-numbers">1</div>
+            <textarea id="codeTextarea" class="code-textarea" spellcheck="false" placeholder="// Pega o escribe aquí tu código..."></textarea>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Barra de Estado Inferior (Status Bar) -->
+    <footer class="kanpad-statusbar">
+      <div class="statusbar-left">
+        <div class="status-badge">
+          <div id="statusDot" class="status-dot"></div>
+          <span id="statusSaveMsg">Listo</span>
+        </div>
+        <span id="statusMode">Modo: Documento</span>
+      </div>
+
+      <div class="statusbar-right">
+        <span id="statusWords">0 palabras</span>
+        <span>UTF-8</span>
+        <span>KanPad Pro v1.0</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modal: Insertar Tabla -->
+  <div id="tableModal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Insertar Tabla</h3>
+        <button class="modal-close-btn" onclick="KanPad.closeModals()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom:14px; color:var(--ink-soft);">Elige la cantidad de filas y columnas para la nueva tabla:</p>
+        <div style="display:flex; gap:16px;">
+          <div style="flex:1;">
+            <label style="display:block; margin-bottom:4px; font-weight:600; font-size:12px;">Filas</label>
+            <input type="number" id="tableRowsInput" class="wh-input" style="width:100%;" min="1" max="50" value="3">
+          </div>
+          <div style="flex:1;">
+            <label style="display:block; margin-bottom:4px; font-weight:600; font-size:12px;">Columnas</label>
+            <input type="number" id="tableColsInput" class="wh-input" style="width:100%;" min="1" max="15" value="3">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="app-btn" onclick="KanPad.closeModals()">Cancelar</button>
+        <button id="btnConfirmTable" class="app-btn btn-primary">Insertar Tabla</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Tareas de Kanlane -->
+  <div id="taskModal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Vincular Tareas de Kanlane</h3>
+        <button class="modal-close-btn" onclick="KanPad.closeModals()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom:12px; color:var(--ink-soft); font-size:12px;">Selecciona una tarea activa en Kanlane para insertarla en tu documento actual:</p>
+        <div id="taskListContainer">
+          <!-- Tareas cargadas dinámicamente -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="app-btn" onclick="KanPad.closeModals()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://kanlane.com/plugins/sdk/workhub-plugin.js"></script>
+  <script src="js/code-highlighter.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

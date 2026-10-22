@@ -1,0 +1,16 @@
+{
+  "id": "com.yalerooo.kanpad-pro",
+  "name": "KanPad Pro",
+  "version": "1.0.0",
+  "description": "El bloc de notas pro para Kanlane: Documentos tipo Word/Docs con tablas y editor de código tipo Notepad++ con formateador inteligente.",
+  "icon": "file-text",
+  "entry": "index.html",
+  "permissions": [
+    "storage",
+    "tasks:read",
+    "tasks:write",
+    "ui:extend"
+  ],
+  "author": "Kanlane Community",
+  "homepage": "https://github.com/yalerooo/Kanlane"
+}
