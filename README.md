@@ -1,91 +1,102 @@
-# 📝 KanPad Pro — Plugin para Kanlane
+# 📝 KanPad Pro 2.0 — Plugin para Kanlane
 
-> **El bloc de notas avanzado para Kanlane**: combina un procesador de documentos enriquecidos (tipo **Google Docs / Word**) con tablas y formato visual, más un potente editor de código (tipo **Notepad++**) con detección de lenguaje, números de línea y formateo inteligente (*prettify*).
-
----
-
-## ✨ Características Principales
-
-### 1. 📄 Modo Documento (Docs / Word Pro)
-- **Formato Enriquecido**: Títulos (H1, H2, H3), Negrita, Cursiva, Subrayado, Tachado, Citas destacadas y Listas.
-- **📊 Tablas Interactivas**: Asistente visual para insertar tablas de cualquier tamaño (filas × columnas) con encabezados y celdas estilizadas.
-- **💡 Cajas de Aviso / Callouts**: Inserta notas informativas, avisos de advertencia (`warning`) o confirmaciones (`success`).
-- **💻 Bloques de Código Integrados**: Incrusta snippets de código con selector de lenguaje y botón de copia con un clic.
-- **Hoja de Trabajo Flotante**: Diseño visual de hoja de papel centrada y limpia adaptada a pantallas grandes y móviles.
-
-### 2. ⚡ Modo Notepad++ (Editor de Código)
-- **Gutter con Números de Línea**: Numeración en tiempo real sincronizada con el scroll y escritura.
-- **Formateo Inteligente (Prettify)**: Botón **"⚡ Formatear Código"** que detecta automáticamente o según el selector la sintaxis y limpia la indentación (JSON, JavaScript, HTML, CSS, SQL, Python).
-- **Soporte para Tab**: Presionar `Tab` añade 2 espacios sin perder el foco en el editor.
-- **Copiar Todo**: Copia todo el contenido del código directamente al portapapeles.
-- **Barra de Estado**: Contador de líneas, palabras, caracteres y estado de guardado.
-
-### 3. 🎯 Integración Nativa con Kanlane
-- **SDK Oficial (`workhub-plugin.js`)**: Comunicación segura mediante `iframe` aislado de Kanlane.
-- **Autosave y Almacenamiento Persistente**: Guarda automáticamente todas las notas en el almacenamiento de Kanlane (`wh.storage`).
-- **📌 Vinculación de Tareas**: Puedes abrir un modal con tus tareas actuales de Kanlane (`wh.tasks.list()`) e insertarlas como tarjetas vinculadas en tus notas.
-- **Adaptación al Tema**: Sigue automáticamente los colores y temas claro/oscuro de Kanlane gracias a sus variables CSS oficiales.
-- **🛡️ Modo Independiente (Local / Standalone)**: Si abres el archivo directamente en tu navegador fuera de Kanlane, funciona de inmediato usando `localStorage` para que puedas probarlo y editar sin restricciones.
+> **La suite completa de productividad y notas para Kanlane**: combina una **Home centralizada** para explorar y organizar tus documentos guardados con **3 potentes secciones de trabajo**:
+> 1. **Docs** (tipo **Google Docs / Word**): Documentos enriquecidos con tablas, listas, citas y notas destacadas.
+> 2. **Notepad** (tipo **Notepad++**): Editor de código con números de línea, detección automática y formateo inteligente (*Prettify*).
+> 3. **Grid** (tipo **Google Sheets / Excel**): Hojas de cálculo interactivas con fórmulas (`SUM`, `AVERAGE`, `COUNT`, `MIN`, `MAX`), formatos y exportación/importación CSV.
 
 ---
 
-## 📁 Estructura del Proyecto
+## 🎨 Apariencia 100% Integrada con Kanlane
 
-```
+Diseñado siguiendo minuciosamente las guías oficiales y tokens de **`plugins/apariencia`** y **`workhub-plugin.css`** de Kanlane:
+- **Tipografía Nativa**: Geist, Inter y Geist Mono para código.
+- **Controles Segmentados (`.seg`)**: Selector de pestañas y modos idéntico al panel de Ajustes y Apariencia de Kanlane.
+- **Botones y Paneles Oficiales (`.wh-btn`, `.panel`, `.row`)**: Bordes suaves, radios curvados (`var(--r-md)`, `var(--r-xl)`) y elevaciones sutiles.
+- **Temas Dinámicos**: Soporte automático para temas Claro y Oscuro (`data-theme="dark"` / `light`) sincronizados con la app madre de Kanlane.
+- **Modo Embebido Sin Fondo Propio (`html.wh-embedded`)**: Se mimetiza con la aplicación cuando corre dentro del marco seguro de Kanlane.
+
+---
+
+## 🚀 Características Principales
+
+### 🏠 1. Nueva Vista Home (Explorador Centralizado)
+- **Tarjetas de Creación Rápida**: Acceso con 1 clic para crear un nuevo Documento, Hoja Grid o Nota de Código.
+- **Galería de Documentos Guardados**: Visualiza todos tus archivos con insignias de tipo coloreadas (`Docs` en azul, `Grid` en verde, `Notepad` en violeta).
+- **Buscador Instantáneo**: Filtra en tiempo real por título o contenido.
+- **Filtros por Tipo**: Pestañas segmentadas para ver `Todos`, solo `Docs`, solo `Grid` o solo `Notepad`.
+- **Acciones Rápidas por Documento**: Abrir, Duplicar, Exportar y Eliminar.
+
+### 📄 2. Modo Docs (Google Docs / Word Pro)
+- **Formato Enriquecido**: Títulos (H1, H2, H3), Negrita, Cursiva, Subrayado, Tachado, Citas y Enlaces.
+- **Tablas Interactivas**: Asistente visual para insertar tablas de cualquier número de filas y columnas.
+- **Cajas de Aviso / Callouts**: Inserta notas informativas (`info`), avisos de advertencia (`warning`) o confirmaciones de éxito (`success`).
+- **Bloques de Código Incrustados**: Snippets de código formateado con selector de lenguaje y botón de copia con un clic.
+- **Hoja Flotante Centrada**: Diseño limpio de papel adaptado a pantallas grandes y móviles.
+
+### 📊 3. Modo Grid (Google Sheets / Excel Pro)
+- **Cuadrícula de Celdas Interactiva**: Columnas alfabéticas (A, B, C...) y filas numeradas (1, 2, 3...) con cabeceras fijas (*sticky*).
+- **Barra de Fórmulas Dinámica**: Muestra la coordenada de la celda activa (ej: `B4`) y permite escribir fórmulas o valores directamente.
+- **Motor de Fórmulas Matemáticas**:
+  - `SUM` / `SUMA`: `=SUM(A1:A5)`
+  - `AVERAGE` / `PROMEDIO`: `=AVERAGE(B1:B10)`
+  - `COUNT` / `CONTAR`: `=COUNT(C1:C20)`
+  - `MIN` y `MAX`: `=MIN(A1:A10)`, `=MAX(A1:A10)`
+  - Operaciones aritméticas y porcentajes: `=B2*C2`, `=A1*1.21`, `=(B2-B1)/B1`
+- **Formateo de Celdas**:
+  - Negrita, Cursiva y Alineación (Izquierda, Centro, Derecha).
+  - Tipos de datos: Normal, Moneda (`1.234,50 €` o `$ 1,234.50`), Porcentaje (`15.0%`), Decimales (`12.34`) o Enteros.
+- **Gestión de Filas y Columnas**: Botones para añadir y eliminar filas y columnas.
+- **Importación y Exportación CSV**: Descarga tu hoja en formato CSV compatible con Microsoft Excel o Google Sheets, o importa cualquier archivo `.csv` local.
+
+### ⚡ 4. Modo Notepad++ (Editor de Código)
+- **Gutter con Números de Línea**: Numeración sincronizada con el scroll y escritura en tiempo real.
+- **Formateo Inteligente (Prettify)**: Botón **"⚡ Formatear Código"** que ordena y limpia la sangría de JSON, JavaScript, HTML, CSS, SQL y Python.
+- **Soporte para Tecla Tab**: Inserta 2 espacios de sangría sin perder el foco del editor.
+- **Copiar Todo con 1 Clic**: Envía todo el código al portapapeles.
+- **Contador de Líneas y Caracteres**: Monitorización precisa del tamaño del script.
+
+### 🔗 5. Integración con Tareas de Kanlane
+- Conexión mediante el SDK oficial (`workhub-plugin.js`).
+- Permite listar las tareas activas de tu proyecto de Kanlane e incrustarlas directamente en un documento o en la hoja de cálculo.
+- Autosave continuo mediante `wh.storage` con respaldo automático en `localStorage`.
+
+---
+
+## 🛠️ Estructura del Proyecto
+
+```text
 kanpad-pro/
-├── index.html              # Interfaz principal (UI, barra de herramientas y modales)
-├── manifest.json           # Configuración y permisos del plugin para Kanlane
+├── index.html              # Estructura principal (Home, Docs, Notepad, Grid, Modales)
+├── manifest.json           # Declaración y permisos del plugin para Kanlane
 ├── css/
-│   └── styles.css          # Estilos modernos con variables de diseño de Kanlane
+│   └── styles.css          # Tokens, componentes y estilos oficiales de apariencia
 ├── js/
-│   ├── app.js              # Lógica principal, estado de notas y SDK Kanlane
+│   ├── app.js              # Controlador principal, gestión de estado y persistencia
+│   ├── grid.js             # Motor de cálculo y renderizado de hojas de cálculo (Grid)
 │   └── code-highlighter.js # Formateador y detector de sintaxis multilinguaje
-└── README.md               # Esta documentación
+└── README.md               # Documentación completa
 ```
 
 ---
 
-## 🚀 Cómo Probarlo en Local
+## 💻 Cómo Probarlo en Local
 
-Puedes probar el plugin en tu equipo de varias formas:
+1. **Directamente en tu navegador**:
+   Haz doble clic sobre `index.html` para abrirlo en Chrome, Edge o Firefox. El plugin detectará que está en modo local y usará `localStorage`.
 
-### Opción A: Abrir directamente en el navegador
-Simplemente haz doble clic en `index.html` o ábrelo con Chrome/Edge. El plugin detectará automáticamente que está en modo local y usará `localStorage` para guardar tus notas.
-
-### Opción B: Usar un servidor local ligero
-Si tienes Node.js o Python instalado:
-
-```powershell
-# Con Python:
-python -m http.server 8080
-
-# O con npx:
-npx serve .
-```
-Luego visita `http://localhost:8080` en tu navegador.
+2. **Con un servidor local**:
+   ```powershell
+   python -m http.server 8080
+   # o bien:
+   npx serve .
+   ```
+   Abre `http://localhost:8080` en tu navegador.
 
 ---
 
-## 🌐 Cómo Instalarlo en Kanlane
+## 📦 Cómo Instalarlo en Kanlane
 
-Los plugins de Kanlane se ejecutan mediante URLs seguras con HTTPS (por ejemplo alojados en **GitHub Pages**):
-
-1. **Sube este proyecto a tu repositorio de GitHub**:
-   - Crea un repositorio (ej: `kanpad-pro`).
-   - Sube los archivos de esta carpeta.
-   - En GitHub: Ve a **Settings** → **Pages** → y activa GitHub Pages en la rama `main`.
-   - Obtendrás una URL como: `https://tu-usuario.github.io/kanpad-pro/`
-
-2. **Añádelo a Kanlane**:
-   - En tu aplicación de Kanlane, ve a la sección **Plugins**.
-   - Pega la URL de tu plugin (ej: `https://tu-usuario.github.io/kanpad-pro/index.html`).
-   - Haz clic en **Añadir**, revisa los permisos solicitados (`storage`, `tasks:read`, `tasks:write`, `ui:extend`) y pulsa **Instalar**.
-   - ¡Listo! Tendrás tu bloc de notas pro disponible como panel integrado en Kanlane.
-
----
-
-## 🔒 Permisos Solicitados
-- `storage`: Permite guardar tus documentos y código de forma segura en Kanlane.
-- `tasks:read`: Permite listar tus tareas para vincularlas en las notas.
-- `tasks:write`: Permite crear o actualizar tareas desde tus notas.
-- `ui:extend`: Permite abrir vistas y formularios dentro de Kanlane.
+1. Sube este repositorio a **GitHub**.
+2. En GitHub: ve a **Settings** → **Pages** y activa GitHub Pages en la rama `main`.
+3. En **Kanlane**: ve a **Plugins** → **Añadir**, pega la URL pública (ej: `https://tu-usuario.github.io/kanpad-pro/index.html`) y pulsa **Instalar**.

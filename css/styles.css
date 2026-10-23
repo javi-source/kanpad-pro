@@ -1,53 +1,63 @@
 /* ==========================================================================
    KanPad Pro - Estilos principales
-   Integrado con el sistema de tokens y temas de Kanlane
+   Inspirado y 100% integrado con el diseño oficial de Kanlane (plugins/apariencia)
    ========================================================================== */
 
-/* Variables por defecto (si no corre dentro de Kanlane) */
+/* Variables base del sistema de diseño Kanlane (workhub-plugin.css & apariencia.css) */
 :root {
   --bg: #F4F5F7;
   --surface: #FFFFFF;
   --surface-2: rgba(23, 24, 28, 0.055);
-  --surface-code: #1e1e24;
+  --surface-3: rgba(23, 24, 28, 0.09);
+  --surface-code: #17171C;
   --hover: rgba(23, 24, 28, 0.045);
   --hover-active: rgba(23, 24, 28, 0.08);
   --ink: #17181C;
   --ink-soft: #5D6068;
-  --ink-faint: #8E929C;
+  --ink-faint: #686C76;
   --line: rgba(23, 24, 28, 0.08);
-  --line-strong: rgba(23, 24, 28, 0.16);
-  --accent: #2563EB;
-  --accent-solid: #2563EB;
+  --line-strong: rgba(23, 24, 28, 0.14);
+  --accent: #18181B;
+  --accent-solid: #18181B;
   --accent-ink: #FFFFFF;
-  --accent-soft: rgba(37, 99, 235, 0.1);
+  --accent-soft: rgba(23, 24, 28, 0.07);
   --danger: #D32222;
-  --danger-bg: rgba(211, 34, 34, 0.08);
-  --success: #10B981;
-  --warning: #F59E0B;
+  --danger-bg: rgba(220, 38, 38, 0.08);
+  --success: #147A3A;
+  --success-bg: rgba(20, 122, 58, 0.08);
+  --warning: #92580A;
+  --warning-bg: rgba(146, 88, 10, 0.08);
+  --st-doc: #2563EB;
+  --st-code: #8B5CF6;
+  --st-grid: #10B981;
   --r-sm: 6px;
   --r-md: 9px;
   --r-lg: 12px;
-  --font: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
-  --mono: 'JetBrains Mono', 'Fira Code', 'Geist Mono', Consolas, monospace;
+  --r-xl: 14px;
+  --font: 'Geist', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --mono: 'Geist Mono', ui-monospace, Consolas, monospace;
   --sidebar-w: 260px;
 }
 
 [data-theme="dark"] {
-  --bg: #111215;
-  --surface: #18191E;
-  --surface-2: rgba(255, 255, 255, 0.06);
-  --surface-code: #121316;
-  --hover: rgba(255, 255, 255, 0.05);
+  --bg: #0A0A0C;
+  --surface: #17171B;
+  --surface-2: rgba(255, 255, 255, 0.07);
+  --surface-3: rgba(255, 255, 255, 0.12);
+  --surface-code: #101014;
+  --hover: rgba(255, 255, 255, 0.06);
   --hover-active: rgba(255, 255, 255, 0.1);
-  --ink: #F3F4F6;
-  --ink-soft: #A3A7B2;
-  --ink-faint: #6B7280;
-  --line: rgba(255, 255, 255, 0.08);
-  --line-strong: rgba(255, 255, 255, 0.16);
-  --accent-soft: rgba(37, 99, 235, 0.2);
+  --ink: #F4F5F7;
+  --ink-soft: #9EA2AC;
+  --ink-faint: #686C76;
+  --line: rgba(255, 255, 255, 0.09);
+  --line-strong: rgba(255, 255, 255, 0.15);
+  --accent: #FFFFFF;
+  --accent-solid: #FFFFFF;
+  --accent-ink: #0A0A0C;
+  --accent-soft: rgba(255, 255, 255, 0.1);
 }
 
-/* Reset y base */
 * {
   box-sizing: border-box;
 }
@@ -66,16 +76,47 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Contenedor principal de la app */
+/* Modo embebido dentro de Kanlane */
+html.wh-embedded, html.wh-embedded body {
+  background: transparent;
+}
+html.wh-embedded body {
+  padding: 0;
+}
+
+/* Scrollbar fina oficial de Kanlane */
+html, div {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--ink-faint) 45%, transparent) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--ink-faint) 35%, transparent);
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--ink-faint);
+}
+
+/* Estructura general */
 .kanpad-app {
   display: flex;
   flex-direction: column;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  background: var(--bg);
 }
 
-/* Barra superior de la aplicación */
+/* Header superior */
 .kanpad-header {
   height: 48px;
   min-height: 48px;
@@ -85,7 +126,8 @@ html, body {
   align-items: center;
   justify-content: space-between;
   padding: 0 14px;
-  z-index: 20;
+  gap: 12px;
+  z-index: 30;
 }
 
 .kanpad-header-left,
@@ -96,308 +138,623 @@ html, body {
   gap: 8px;
 }
 
+.kanpad-header-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.kanpad-header-center {
+  flex: none;
+}
+
+.kanpad-header-right {
+  flex: none;
+}
+
+/* Botón Home */
+.btn-home-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 550;
+  cursor: pointer;
+  transition: background .12s ease, border-color .12s ease;
+}
+.btn-home-nav:hover {
+  background: var(--hover);
+}
+.btn-home-nav.is-active {
+  background: var(--surface-2);
+  border-color: var(--ink);
+}
+
+/* Marca / Badge */
 .brand-badge {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-weight: 700;
-  font-size: 14px;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: -0.01em;
   color: var(--ink);
-  user-select: none;
+  white-space: nowrap;
 }
 
 .brand-logo-icon {
-  width: 26px;
-  height: 26px;
-  background: var(--accent-solid);
-  color: var(--accent-ink);
+  width: 22px;
+  height: 22px;
   border-radius: var(--r-sm);
+  background: var(--ink);
+  color: var(--surface);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 800;
-  font-size: 14px;
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .brand-tag {
   font-size: 10px;
   font-weight: 600;
-  background: var(--accent-soft);
-  color: var(--accent-solid);
   padding: 1px 6px;
   border-radius: 4px;
+  background: var(--surface-2);
+  color: var(--ink-soft);
   text-transform: uppercase;
 }
 
-/* Input de título del documento en el header */
+/* Input para editar título de la nota */
 .note-title-input {
-  background: transparent;
+  font-size: 13px;
+  font-weight: 550;
   border: 1px solid transparent;
+  background: transparent;
   color: var(--ink);
-  font-size: 14px;
-  font-weight: 600;
   padding: 4px 8px;
   border-radius: var(--r-sm);
-  width: 240px;
   outline: none;
-  transition: all 0.15s ease;
+  width: 240px;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  transition: border-color .15s, background .15s;
 }
-
 .note-title-input:hover {
-  background: var(--surface-2);
+  background: var(--hover);
 }
-
 .note-title-input:focus {
   background: var(--surface);
+  border-color: var(--line-strong);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+/* ==========================================================================
+   Controles Segmentados (.seg) idénticos a plugins/apariencia
+   ========================================================================== */
+.seg {
+  display: inline-flex;
+  flex-wrap: wrap;
+  padding: 2px;
+  gap: 1px;
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+}
+
+.seg button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 0 11px;
+  border: none;
+  border-radius: calc(var(--r-md) - 2px);
+  background: transparent;
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .12s ease, color .12s ease, box-shadow .12s ease;
+}
+
+.seg button:hover {
+  color: var(--ink);
+}
+
+.seg button.is-on {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .08), 0 0 0 1px var(--line);
+  font-weight: 550;
+}
+
+.seg button svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+}
+
+/* Botones Kanlane (.wh-btn) */
+.wh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 11px;
+  border-radius: var(--r-md);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  white-space: nowrap;
+  transition: background .12s ease, border-color .12s ease, color .12s ease;
+}
+.wh-btn:hover {
+  background: var(--hover);
+}
+.wh-btn:focus-visible {
+  outline: 2px solid var(--accent-solid);
+  outline-offset: 2px;
+}
+.wh-btn.is-primary {
+  background: var(--accent-solid);
+  border-color: var(--accent-solid);
+  color: var(--accent-ink);
+}
+.wh-btn.is-primary:hover {
+  opacity: .90;
+}
+.wh-btn.is-danger {
+  color: var(--danger);
+}
+.wh-btn.is-danger:hover {
+  background: var(--danger-bg);
+  border-color: var(--danger);
+}
+.wh-btn.btn-icon-only {
+  width: 30px;
+  padding: 0;
+}
+
+/* Inputs y Selects */
+.wh-input, .wh-select {
+  height: 30px;
+  padding: 0 9px;
+  border-radius: var(--r-md);
+  font: inherit;
+  font-size: 12.5px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  outline: none;
+  transition: border-color .12s ease, box-shadow .12s ease;
+}
+.wh-input:focus, .wh-select:focus {
   border-color: var(--accent-solid);
   box-shadow: 0 0 0 2px var(--accent-soft);
 }
 
-/* Switcher de Modos: Documento / Notepad++ Código / Split */
-.mode-segmented-control {
-  display: flex;
-  background: var(--surface-2);
-  padding: 2px;
-  border-radius: var(--r-md);
+/* Paneles Kanlane (.panel) */
+.panel {
+  background: var(--surface);
   border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  overflow: hidden;
 }
 
-.mode-btn {
+.row {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  background: transparent;
-  border: none;
-  border-radius: var(--r-sm);
-  color: var(--ink-soft);
+  gap: 20px;
+  padding: 14px 18px;
+  border-top: 1px solid var(--line);
+}
+.row:first-child {
+  border-top: 0;
+}
+.row-text {
+  flex: 1;
+  min-width: 0;
+}
+.row-text h3 {
+  font-size: 13px;
+  font-weight: 550;
+  margin: 0;
+  color: var(--ink);
+}
+.row-text p {
   font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s ease;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  margin: 2px 0 0;
+}
+.row-ctl {
+  flex: none;
 }
 
-.mode-btn:hover {
-  color: var(--ink);
+/* ==========================================================================
+   VISTA HOME (KanPad Pro Dashboard)
+   ========================================================================== */
+.home-view-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 20px 48px;
+  max-width: 980px;
+  width: 100%;
+  margin-inline: auto;
 }
 
-.mode-btn.active {
-  background: var(--surface);
-  color: var(--ink);
+.home-hero {
+  margin-bottom: 26px;
+}
+.home-hero h1 {
+  font-size: 22px;
   font-weight: 600;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  letter-spacing: -0.025em;
+  margin: 0 0 4px;
+  color: var(--ink);
+}
+.home-hero .lead {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin: 0;
 }
 
-/* Botones genéricos de la barra */
-.app-btn {
+/* Tarjetas para Crear Nuevo (Docs, Grid, Notepad) */
+.creation-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+.creation-card {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  cursor: pointer;
+  text-align: left;
+  transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+  position: relative;
+  overflow: hidden;
+}
+.creation-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--ink);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .06);
+}
+
+.creation-card-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.creation-card.doc-type .creation-card-icon {
+  background: rgba(37, 99, 235, 0.1);
+  color: #2563EB;
+}
+.creation-card.grid-type .creation-card-icon {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10B981;
+}
+.creation-card.code-type .creation-card-icon {
+  background: rgba(139, 92, 246, 0.1);
+  color: #8B5CF6;
+}
+
+.creation-card h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.creation-card p {
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin: 0 0 12px;
+  line-height: 1.4;
+  flex: 1;
+}
+.creation-card-btn {
+  align-self: flex-start;
+  font-size: 12px;
+  font-weight: 550;
+  padding: 4px 10px;
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.creation-card:hover .creation-card-btn {
+  background: var(--ink);
+  color: var(--surface);
+  border-color: var(--ink);
+}
+
+/* Explorador de Documentos Guardados */
+.home-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.home-section-header h2 {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 0;
+  color: var(--ink);
+}
+.home-search-filter-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.home-search-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.home-search-input-wrap svg {
+  position: absolute;
+  left: 9px;
+  width: 14px;
+  height: 14px;
+  color: var(--ink-faint);
+}
+.home-search-input {
+  width: 220px;
+  padding-left: 28px !important;
+}
+
+/* Cuadrícula de Documentos Guardados */
+.docs-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.doc-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+  transition: border-color .12s ease, box-shadow .12s ease;
+  position: relative;
+}
+.doc-card:hover {
+  border-color: var(--line-strong);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .05);
+}
+
+.doc-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.doc-card-type-pill {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  height: 28px;
-  padding: 0 9px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
   border-radius: var(--r-sm);
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  color: var(--ink-soft);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  transition: all 0.15s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.doc-card-type-pill.is-doc {
+  background: rgba(37, 99, 235, 0.1);
+  color: #2563EB;
+}
+.doc-card-type-pill.is-grid {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10B981;
+}
+.doc-card-type-pill.is-code {
+  background: rgba(139, 92, 246, 0.1);
+  color: #8B5CF6;
 }
 
-.app-btn:hover {
+.doc-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.doc-card-snippet {
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.45;
+  height: 38px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.doc-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  font-size: 11.5px;
+  color: var(--ink-faint);
+}
+
+.doc-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.doc-action-btn {
+  background: transparent;
+  border: none;
+  color: var(--ink-faint);
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.doc-action-btn:hover {
   background: var(--hover);
   color: var(--ink);
-  border-color: var(--line-strong);
+}
+.doc-action-btn.is-delete:hover {
+  background: var(--danger-bg);
+  color: var(--danger);
 }
 
-.app-btn.btn-primary {
-  background: var(--accent-solid);
-  color: var(--accent-ink);
-  border-color: var(--accent-solid);
-}
-
-.app-btn.btn-primary:hover {
-  opacity: 0.9;
-}
-
-.app-btn.btn-icon-only {
-  padding: 0;
-  width: 28px;
-  justify-content: center;
-}
-
-/* Área central de trabajo (Sidebar + Editor) */
-.kanpad-body {
+/* ==========================================================================
+   VISTA DE EDICIÓN (Sidebar + Editor Workspace)
+   ========================================================================== */
+.kanpad-editor-layout {
   display: flex;
   flex: 1;
   overflow: hidden;
   position: relative;
 }
 
-/* Barra lateral / Sidebar de notas */
+/* Barra lateral de documentos */
 .kanpad-sidebar {
   width: var(--sidebar-w);
-  min-width: 200px;
-  max-width: 400px;
+  min-width: var(--sidebar-w);
   background: var(--surface);
   border-right: 1px solid var(--line);
   display: flex;
   flex-direction: column;
-  transition: margin-left 0.2s ease, width 0.2s ease;
+  transition: margin-left .2s cubic-bezier(0.2, 0, 0, 1);
   z-index: 10;
 }
-
 .kanpad-sidebar.is-collapsed {
   margin-left: calc(-1 * var(--sidebar-w));
 }
 
 .sidebar-header {
-  padding: 10px;
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
   display: flex;
   flex-direction: column;
   gap: 8px;
-  border-bottom: 1px solid var(--line);
 }
 
 .sidebar-search-box {
   display: flex;
   align-items: center;
   gap: 6px;
+  padding: 0 8px;
   background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
-  padding: 4px 8px;
+  height: 28px;
 }
-
 .sidebar-search-box input {
   background: transparent;
   border: none;
-  outline: none;
+  font: inherit;
   font-size: 12px;
   color: var(--ink);
+  outline: none;
   width: 100%;
-}
-
-.sidebar-filter-tabs {
-  display: flex;
-  gap: 4px;
-}
-
-.filter-tab {
-  flex: 1;
-  text-align: center;
-  font-size: 11px;
-  font-weight: 500;
-  padding: 3px 0;
-  border-radius: var(--r-sm);
-  background: transparent;
-  border: none;
-  color: var(--ink-faint);
-  cursor: pointer;
-}
-
-.filter-tab.active {
-  background: var(--surface-2);
-  color: var(--ink);
-  font-weight: 600;
 }
 
 .sidebar-notes-list {
   flex: 1;
   overflow-y: auto;
-  padding: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.note-item {
+  padding: 6px 8px;
   display: flex;
   flex-direction: column;
   gap: 2px;
+}
+
+.sidebar-note-item {
+  display: flex;
+  flex-direction: column;
   padding: 8px 10px;
   border-radius: var(--r-md);
   cursor: pointer;
   border: 1px solid transparent;
-  transition: all 0.15s ease;
-  position: relative;
+  transition: background .12s, border-color .12s;
 }
-
-.note-item:hover {
+.sidebar-note-item:hover {
   background: var(--hover);
 }
-
-.note-item.active {
-  background: var(--accent-soft);
-  border-color: color-mix(in srgb, var(--accent-solid) 30%, transparent);
+.sidebar-note-item.is-active {
+  background: var(--surface-2);
+  border-color: var(--line-strong);
 }
 
-.note-item-header {
+.sidebar-note-item-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 4px;
+  gap: 6px;
+  margin-bottom: 2px;
 }
-
-.note-item-title {
-  font-size: 13px;
-  font-weight: 600;
+.sidebar-note-item-title {
+  font-size: 12.5px;
+  font-weight: 550;
   color: var(--ink);
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  flex: 1;
+  white-space: nowrap;
 }
-
-.note-item-type {
-  font-size: 10px;
-  font-family: var(--mono);
-  padding: 1px 4px;
+.sidebar-note-item-tag {
+  font-size: 9.5px;
+  font-weight: 600;
+  padding: 1px 5px;
   border-radius: 3px;
-  background: var(--surface-2);
-  color: var(--ink-soft);
+  text-transform: uppercase;
 }
+.sidebar-note-item-tag.is-doc { background: rgba(37,99,235,.1); color: #2563EB; }
+.sidebar-note-item-tag.is-grid { background: rgba(16,185,129,.1); color: #10B981; }
+.sidebar-note-item-tag.is-code { background: rgba(139,92,246,.1); color: #8B5CF6; }
 
-.note-item-preview {
+.sidebar-note-item-sub {
   font-size: 11px;
   color: var(--ink-faint);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.note-item-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 10.5px;
-  color: var(--ink-faint);
-  margin-top: 2px;
 }
 
-.note-item-delete {
-  opacity: 0;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--ink-faint);
-  padding: 2px;
-  border-radius: 4px;
-  transition: all 0.1s;
-}
-
-.note-item:hover .note-item-delete {
-  opacity: 1;
-}
-
-.note-item-delete:hover {
-  color: var(--danger);
-  background: var(--danger-bg);
-}
-
-/* Área de edición principal */
-.kanpad-editor-container {
+/* Área central de edición */
+.editor-main-area {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -405,285 +762,157 @@ html, body {
   background: var(--bg);
 }
 
-/* Toolbar de edición para Documentos (Word/Docs) */
+/* ==========================================================================
+   MODO 1: DOCUMENTO (Word / Google Docs)
+   ========================================================================== */
 .doc-toolbar {
-  height: 40px;
-  min-height: 40px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--line);
   display: flex;
   align-items: center;
-  gap: 3px;
-  padding: 0 10px;
-  overflow-x: auto;
-  white-space: nowrap;
-  scrollbar-width: none;
-}
-
-.doc-toolbar::-webkit-scrollbar {
-  display: none;
+  gap: 4px;
+  padding: 6px 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+  z-index: 5;
 }
 
 .tb-btn {
+  width: 28px;
+  height: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--r-sm);
-  border: 1px solid transparent;
   background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
   color: var(--ink-soft);
+  font: inherit;
+  font-size: 12.5px;
   cursor: pointer;
-  font-size: 13px;
-  transition: all 0.12s ease;
+  transition: background .12s, color .12s;
 }
-
 .tb-btn:hover {
   background: var(--hover);
   color: var(--ink);
 }
-
-.tb-btn.active {
+.tb-btn:active, .tb-btn.is-active {
   background: var(--surface-2);
-  color: var(--accent-solid);
   border-color: var(--line);
+  color: var(--ink);
 }
-
 .tb-divider {
   width: 1px;
-  height: 20px;
+  height: 18px;
   background: var(--line);
   margin: 0 4px;
 }
 
-.tb-select {
-  height: 28px;
-  padding: 0 6px;
-  border-radius: var(--r-sm);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  color: var(--ink);
-  font-size: 12px;
-  outline: none;
-  cursor: pointer;
-}
-
-/* Dropdown de tablas y opciones */
-.dropdown-menu-custom {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background: var(--surface);
-  border: 1px solid var(--line-strong);
-  border-radius: var(--r-md);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-  padding: 6px;
-  display: none;
-  z-index: 100;
-  min-width: 160px;
-}
-
-.dropdown-menu-custom.show {
-  display: block;
-}
-
-.dropdown-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  font-size: 12px;
-  color: var(--ink);
-  border-radius: var(--r-sm);
-  cursor: pointer;
-  border: none;
-  background: transparent;
-  width: 100%;
-  text-align: left;
-}
-
-.dropdown-item:hover {
-  background: var(--hover);
-}
-
-/* Área de contenido del Documento */
 .doc-viewport {
   flex: 1;
   overflow-y: auto;
-  padding: 24px;
+  padding: 24px 20px 48px;
   display: flex;
   justify-content: center;
 }
 
 .doc-sheet {
   width: 100%;
-  max-width: 860px;
-  min-height: calc(100vh - 160px);
+  max-width: 820px;
+  min-height: 800px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-  padding: 40px 48px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  padding: 48px 56px;
   outline: none;
   font-size: 14px;
-  line-height: 1.7;
+  line-height: 1.65;
   color: var(--ink);
 }
 
-.doc-sheet:focus {
-  border-color: color-mix(in srgb, var(--accent-solid) 30%, transparent);
-}
-
-/* Estilos de tipografía dentro del documento */
-.doc-sheet h1 { font-size: 26px; font-weight: 700; margin: 20px 0 10px; color: var(--ink); border-bottom: 1px solid var(--line); padding-bottom: 6px; }
-.doc-sheet h2 { font-size: 20px; font-weight: 600; margin: 16px 0 8px; color: var(--ink); }
-.doc-sheet h3 { font-size: 16px; font-weight: 600; margin: 12px 0 6px; color: var(--ink); }
-.doc-sheet p { margin: 0 0 12px; color: var(--ink); }
-.doc-sheet blockquote {
-  border-left: 3px solid var(--accent-solid);
-  margin: 14px 0;
-  padding: 8px 16px;
-  background: var(--surface-2);
-  border-radius: 0 var(--r-sm) var(--r-sm) 0;
-  color: var(--ink-soft);
-  font-style: italic;
-}
-
-/* Callout pro / Cajas de aviso */
-.doc-sheet .callout {
-  display: flex;
-  gap: 12px;
-  padding: 12px 16px;
-  border-radius: var(--r-md);
-  margin: 14px 0;
-  background: var(--accent-soft);
-  border: 1px solid color-mix(in srgb, var(--accent-solid) 20%, transparent);
+.doc-sheet h1, .doc-sheet h2, .doc-sheet h3 {
+  margin: 1.2em 0 0.5em;
+  font-weight: 600;
+  letter-spacing: -0.015em;
   color: var(--ink);
 }
+.doc-sheet h1:first-child { margin-top: 0; }
+.doc-sheet h1 { font-size: 24px; }
+.doc-sheet h2 { font-size: 18px; }
+.doc-sheet h3 { font-size: 15px; }
+.doc-sheet p { margin: 0 0 1em; }
 
-.doc-sheet .callout.callout-warning {
-  background: rgba(245, 158, 11, 0.1);
-  border-color: rgba(245, 158, 11, 0.25);
-}
-
-.doc-sheet .callout.callout-success {
-  background: rgba(16, 185, 129, 0.1);
-  border-color: rgba(16, 185, 129, 0.25);
-}
-
-/* Tablas Pro estilo Google Docs / Word */
 .doc-sheet table {
   width: 100%;
   border-collapse: collapse;
   margin: 16px 0;
-  font-size: 13.5px;
-  border: 1px solid var(--line-strong);
+  font-size: 13px;
 }
-
-.doc-sheet table th,
-.doc-sheet table td {
+.doc-sheet th, .doc-sheet td {
   border: 1px solid var(--line-strong);
-  padding: 8px 12px;
-  min-width: 60px;
-  position: relative;
-}
-
-.doc-sheet table th {
-  background: var(--surface-2);
-  font-weight: 600;
+  padding: 8px 10px;
   text-align: left;
 }
-
-.doc-sheet table tr:hover td {
-  background: rgba(0, 0, 0, 0.015);
+.doc-sheet th {
+  background: var(--surface-2);
+  font-weight: 600;
+  color: var(--ink);
 }
 
-/* Bloques de código incrustados dentro del documento */
-.doc-code-block {
-  position: relative;
-  background: var(--surface-code);
-  color: #f8f8f2;
+.doc-sheet .callout {
+  padding: 12px 14px;
   border-radius: var(--r-md);
+  margin: 14px 0;
+  font-size: 13px;
+  background: var(--surface-2);
+  border-left: 3px solid var(--ink-soft);
+}
+.doc-sheet .callout.callout-info { border-left-color: #2563EB; background: rgba(37,99,235,0.06); }
+.doc-sheet .callout.callout-warning { border-left-color: #F59E0B; background: rgba(245,158,11,0.07); }
+.doc-sheet .callout.callout-success { border-left-color: #10B981; background: rgba(16,185,129,0.07); }
+
+.doc-code-block {
+  background: var(--surface-code);
+  color: #ECEEF2;
+  border-radius: var(--r-md);
+  padding: 12px 14px;
   margin: 16px 0;
   font-family: var(--mono);
-  font-size: 13px;
-  overflow: hidden;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  font-size: 12.5px;
 }
-
 .doc-code-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 6px 12px;
+  align-items: center;
   font-size: 11px;
-  color: #9da5b4;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.doc-code-copy-btn {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #d1d5db;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.doc-code-copy-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-}
-
-.doc-code-block pre {
-  margin: 0;
-  padding: 14px 16px;
-  overflow-x: auto;
-}
-
-.doc-code-block code {
-  font-family: inherit;
-  font-size: 13px;
-  tab-size: 2;
-}
-
-/* Código inline */
-.doc-sheet code:not(pre code) {
-  background: var(--surface-2);
-  color: var(--accent-solid);
-  font-family: var(--mono);
-  font-size: 0.9em;
-  padding: 2px 5px;
-  border-radius: 4px;
+  color: #8E929C;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 /* ==========================================================================
-   Modo Notepad++ / Editor de Código
+   MODO 2: NOTEPAD (Código Notepad++)
    ========================================================================== */
 .code-mode-container {
   flex: 1;
-  display: none;
+  display: flex;
   flex-direction: column;
   overflow: hidden;
   background: var(--surface-code);
-  color: #abb2bf;
+  color: #ECEEF2;
 }
 
 .code-mode-toolbar {
-  height: 38px;
-  min-height: 38px;
-  background: rgba(0, 0, 0, 0.25);
+  height: 40px;
+  min-height: 40px;
+  background: rgba(0, 0, 0, 0.2);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 12px;
+  padding: 0 14px;
 }
-
 .code-mode-toolbar-left,
 .code-mode-toolbar-right {
   display: flex;
@@ -691,109 +920,262 @@ html, body {
   gap: 8px;
 }
 
+.code-lang-select {
+  height: 28px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #FFF;
+  border-radius: var(--r-sm);
+  padding: 0 8px;
+  font-size: 12px;
+}
+.code-lang-select option {
+  background: #17171C;
+  color: #FFF;
+}
+
 .code-tool-btn {
+  height: 28px;
+  padding: 0 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #FFF;
+  border-radius: var(--r-sm);
+  font-size: 12px;
+  font-weight: 500;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  height: 26px;
-  padding: 0 8px;
-  border-radius: var(--r-sm);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #e5e7eb;
-  font-size: 12px;
-  font-family: var(--mono);
+  gap: 6px;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: background .12s;
 }
-
 .code-tool-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.18);
 }
-
 .code-tool-btn.btn-glow {
-  background: var(--accent-solid);
-  border-color: var(--accent-solid);
-  color: #fff;
-  font-weight: 600;
+  background: #8B5CF6;
+  border-color: #8B5CF6;
+  color: #FFF;
+}
+.code-tool-btn.btn-glow:hover {
+  opacity: .9;
 }
 
-.code-lang-select {
-  height: 26px;
-  padding: 0 8px;
-  border-radius: var(--r-sm);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #f3f4f6;
-  font-family: var(--mono);
-  font-size: 11.5px;
-  outline: none;
-  cursor: pointer;
-}
-
-/* Lienzo del editor tipo Notepad++ con gutter de líneas */
 .code-editor-layout {
   flex: 1;
   display: flex;
   overflow: hidden;
-  position: relative;
   font-family: var(--mono);
 }
 
 .code-line-numbers {
-  width: 48px;
-  min-width: 48px;
-  background: rgba(0, 0, 0, 0.2);
-  color: #5c6370;
+  width: 52px;
+  background: rgba(0, 0, 0, 0.15);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 12.5px;
+  line-height: 20px;
+  padding: 14px 6px 14px 0;
   text-align: right;
-  padding: 14px 8px 14px 0;
   user-select: none;
-  font-size: 13px;
-  line-height: 22px;
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
   overflow: hidden;
 }
 
 .code-textarea {
   flex: 1;
   background: transparent;
-  color: #abb2bf;
   border: none;
   outline: none;
-  resize: none;
+  color: #F3F4F6;
   font-family: var(--mono);
-  font-size: 13px;
-  line-height: 22px;
+  font-size: 12.5px;
+  line-height: 20px;
   padding: 14px 16px;
-  white-space: pre;
+  resize: none;
   tab-size: 2;
+  white-space: pre;
   overflow: auto;
 }
 
 /* ==========================================================================
-   Modo Dividido (Split Mode)
+   MODO 3: GRID (Excel / Google Sheets)
    ========================================================================== */
-.split-mode-container {
+.grid-mode-container {
   flex: 1;
-  display: none;
-  flex-direction: row;
-  overflow: hidden;
-}
-
-.split-left, .split-right {
-  flex: 1;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  background: var(--surface);
 }
 
-.split-left {
-  border-right: 2px solid var(--line-strong);
+/* Barra de Fórmulas */
+.grid-formula-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.grid-active-cell-box {
+  min-width: 44px;
+  height: 28px;
+  background: var(--surface-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 12px;
+  font-family: var(--mono);
+  color: var(--ink);
+}
+.grid-fx-symbol {
+  font-style: italic;
+  font-family: serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink-soft);
+  padding: 0 4px;
+}
+.grid-formula-input {
+  flex: 1;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--ink);
+  outline: none;
+}
+.grid-formula-input:focus {
+  border-color: var(--accent-solid);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+/* Barra de Herramientas de Hoja */
+.grid-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+/* Contenedor con scroll para la tabla */
+.grid-table-scroll {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  background: var(--surface);
+}
+
+.grid-sheet-table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 12.5px;
+  user-select: none;
+}
+
+/* Encabezados de Columna (A, B, C...) */
+.grid-sheet-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  height: 26px;
+  min-width: 90px;
+  background: var(--surface-2);
+  border-right: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  text-align: center;
+}
+.grid-sheet-table thead th.is-active {
+  background: var(--surface-3);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* Esquina superior izquierda */
+.grid-corner-header {
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 5 !important;
+  width: 44px;
+  min-width: 44px;
+  background: var(--surface-2);
+  border-right: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+/* Encabezados de Fila (1, 2, 3...) */
+.grid-sheet-table tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  width: 44px;
+  height: 24px;
+  background: var(--surface-2);
+  border-right: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-faint);
+  text-align: center;
+}
+.grid-sheet-table tbody th.is-active {
+  background: var(--surface-3);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* Celdas de datos */
+.grid-cell {
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 0 6px;
+  height: 24px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: var(--surface);
+  color: var(--ink);
+  position: relative;
+  cursor: cell;
+}
+.grid-cell.is-selected {
+  outline: 2px solid var(--accent-solid);
+  outline-offset: -1px;
+  z-index: 2;
+  background: var(--accent-soft) !important;
+}
+
+.grid-cell-editor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0 6px;
+  z-index: 10;
 }
 
 /* ==========================================================================
-   Barra de estado inferior (Status Bar)
+   Barra de Estado Inferior (.kanpad-statusbar)
    ========================================================================== */
 .kanpad-statusbar {
   height: 26px;
@@ -804,129 +1186,101 @@ html, body {
   align-items: center;
   justify-content: space-between;
   padding: 0 12px;
-  font-size: 11px;
-  color: var(--ink-faint);
-  user-select: none;
+  font-size: 11.5px;
+  color: var(--ink-soft);
   z-index: 20;
 }
-
 .statusbar-left, .statusbar-right {
   display: flex;
   align-items: center;
   gap: 12px;
 }
-
-.status-badge {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
 .status-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--success);
+  transition: background .2s ease;
 }
-
 .status-dot.saving {
-  background: var(--warning);
+  background: #F59E0B;
   animation: pulse 1s infinite alternate;
 }
-
 @keyframes pulse {
-  0% { opacity: 0.3; }
-  100% { opacity: 1; }
+  from { opacity: 0.5; }
+  to { opacity: 1; }
 }
 
-/* Modal flotante (ej: selector de tablas, vincular tareas de Kanlane) */
+/* Modales */
 .modal-overlay {
+  display: none;
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(2px);
-  display: none;
+  z-index: 999;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  padding: 20px;
 }
-
 .modal-overlay.active {
   display: flex;
 }
-
 .modal-dialog {
   background: var(--surface);
-  border: 1px solid var(--line-strong);
-  border-radius: var(--r-lg);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-  width: 90%;
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  width: 100%;
   max-width: 480px;
-  max-height: 80vh;
-  display: flex;
-  flex-direction: column;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   overflow: hidden;
 }
-
 .modal-header {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--line);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
 }
-
 .modal-header h3 {
+  font-size: 14px;
+  font-weight: 600;
   margin: 0;
-  font-size: 15px;
 }
-
 .modal-close-btn {
   background: transparent;
   border: none;
   font-size: 18px;
-  cursor: pointer;
+  line-height: 1;
   color: var(--ink-soft);
+  cursor: pointer;
 }
-
 .modal-body {
-  padding: 16px;
-  overflow-y: auto;
+  padding: 16px 18px;
 }
-
 .modal-footer {
-  padding: 10px 16px;
-  border-top: 1px solid var(--line);
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  background: var(--surface-2);
-}
-
-/* Tareas vinculadas de Kanlane */
-.task-item-card {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 8px 12px;
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  margin-bottom: 8px;
-  cursor: pointer;
-  transition: all 0.15s;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 18px;
+  background: var(--surface-2);
+  border-top: 1px solid var(--line);
 }
 
-.task-item-card:hover {
-  background: var(--hover);
-  border-color: var(--accent-solid);
+@media (max-width: 768px) {
+  .creation-grid {
+    grid-template-columns: 1fr;
+  }
+  .home-search-input {
+    width: 100%;
+  }
+  .kanpad-header {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 8px 10px;
+  }
+  .note-title-input {
+    width: 140px;
+  }
 }
-
-.task-card-pill {
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: 4px;
-  background: var(--accent-soft);
-  color: var(--accent-solid);
-  font-weight: 600;
-}
-
